@@ -27,9 +27,7 @@ RUN set -e ;\
     # config flow services
     sed -i 's#work_mode: 1#work_mode: 0#' fate/conf/service_conf.yaml ;\
     sed -i 's#export PYTHONPATH=#export PYTHONPATH=/data/app/fate/python#' fate/bin/init_env.sh ;\
-    sed -i 's#venv=#venv=/data/app/venv#' fate/bin/init_env.sh ;\
-    fate_test ;\
-    sed -i 's#path(FATE)#/data/app/fate#' /data/app/fate/python/fate_test/fate_test/fate_test_config.yaml
+    sed -i 's#venv=#venv=/data/app/venv#' fate/bin/init_env.sh
 
 
 # expose commands
@@ -38,6 +36,8 @@ ENV PATH="/data/app/venv/bin:${PATH}"
 # config clients
 RUN set -e ;\
     flow init --ip 127.0.0.1 --port 9380 ;\
-    pipeline init --ip 127.0.0.1 --port 9380
+    pipeline init --ip 127.0.0.1 --port 9380 ;\
+    fate_test ;\
+    sed -i 's#path(FATE)#/data/app/fate#' /data/app/fate/python/fate_test/fate_test/fate_test_config.yaml
 # start flow services
 CMD ["sh", "fate/python/fate_flow/service.sh", "starting"]
